@@ -17,3 +17,6 @@ App to manage smurf accounts
 - [ ] Copy password
 - [ ] Easy deploy
 - [ ] Match average tier
+- [ ] Edit rows
+- [ ] Sync All button
+- [ ] Error handling 
