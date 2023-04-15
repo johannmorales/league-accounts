@@ -3,10 +3,13 @@ export enum QueueType {
 }
 
 export enum Tier {
+  MASTER = 'MASTER',
   DIAMOND = 'DIAMOND',
+  PLATINUM = 'PLATINUM',
   GOLD = 'GOLD',
   SILVER = 'SILVER',
   BRONZE = 'BRONZE',
+  IRON = 'IRON',
 }
 
 export enum Division {

@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import classNames from "classnames";
 import {
   createColumnHelper,
   flexRender,
@@ -22,10 +19,13 @@ type Account = {
   region: string;
   tier: string;
   division: string;
+  matchedTier: string;
+  matchedDivision: string;
   lp: number;
   riotSummonerLevel: number;
   riotProfileIconId: number;
 };
+import { format } from "timeago.js";
 
 const columnHelper = createColumnHelper<Account>();
 
@@ -69,10 +69,18 @@ const defaultColums = [
     ),
   }),
   columnHelper.accessor(
-    (row) => row.tier && `${row.tier} ${row.division} (${row.lp} LP)`,
+    (row) =>
+      row.tier ? `${row.tier} ${row.division} (${row.lp} LP)` : "UNRANKED",
     {
       id: "rank",
       header: () => "Rank",
+    }
+  ),
+  columnHelper.accessor(
+    (row) => row.matchedTier && `${row.matchedTier} ${row.matchedDivision}`,
+    {
+      id: "matched",
+      header: () => "Matched",
     }
   ),
   columnHelper.accessor((row) => row.losses + row.wins, {
@@ -85,7 +93,7 @@ const defaultColums = [
     size: 75,
   }),
   columnHelper.accessor("losses", {
-    header: () => "D",
+    header: () => "L",
     size: 75,
   }),
   columnHelper.accessor(
@@ -97,18 +105,11 @@ const defaultColums = [
       size: 75,
     }
   ),
-  columnHelper.accessor("lastGameAt", {
-    header: () => "Last Game At",
-    cell: (info) => <>{info.getValue()?.toLocaleDateString()}</>,
+  columnHelper.accessor((row) => row.lastSyncAt, {
+    id: "lastSyncAt",
+    header: () => "Last Sync At",
+    cell: (info) => <>{info.getValue() && format(info.getValue())}</>,
   }),
-  columnHelper.accessor(
-    (row) => (row.lastSyncAt ? new Date(row.lastSyncAt) : null),
-    {
-      id: "lastSyncAt",
-      header: () => "Last Sync At",
-      cell: (info) => <>{info.getValue()?.toLocaleDateString()}</>,
-    }
-  ),
   columnHelper.display({
     id: "actions",
     size: 100,
@@ -219,29 +220,26 @@ function App() {
                   ))}
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {table
-                    .getRowModel()
-                    .rows.slice(0, 10)
-                    .map((row) => {
-                      return (
-                        <tr key={row.id}>
-                          {row.getVisibleCells().map((cell, index) => {
-                            return (
-                              <td
-                                key={cell.id}
-                                className="text-center whitespace-nowrap px-3 py-4 first:pl-4 last:pr-4 text-sm text-gray-500"
-                                style={{ width: cell.column.getSize() }}
-                              >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
+                  {table.getRowModel().rows.map((row) => {
+                    return (
+                      <tr key={row.id}>
+                        {row.getVisibleCells().map((cell, index) => {
+                          return (
+                            <td
+                              key={cell.id}
+                              className="text-center whitespace-nowrap px-3 py-4 first:pl-4 last:pr-4 text-sm text-gray-500"
+                              style={{ width: cell.column.getSize() }}
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

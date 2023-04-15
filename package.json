@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently --kill-others \"npm run dev --workspace=frontend\" \"npm run start:dev --workspace=backend\"",
-    "build": "concurrently --kill-others \"npm run build --workspace=frontend\" \"npm run build --workspace=backend\""
+    "build": "concurrently --kill-others \"npm run build --workspace=frontend\" \"npm run build --workspace=backend\"",
+    "generate:riot-client": "npx openapi-typescript http://www.mingweisamuel.com/riotapi-schema/openapi-3.0.0.yml --output ./backend/src/riot/riot.schema.ts"
   },
   "workspaces": [
     "backend",
@@ -14,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "openapi-typescript-codegen": "^0.24.0"
   }
 }
